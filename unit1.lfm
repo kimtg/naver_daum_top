@@ -1,0 +1,26 @@
+object Form1: TForm1
+  Left = 259
+  Height = 237
+  Top = 124
+  Width = 304
+  Caption = 'Form1'
+  ClientHeight = 237
+  ClientWidth = 304
+  LCLVersion = '1.6.4.0'
+  object Memo1: TMemo
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 8
+    Height = 190
+    Top = 8
+    Width = 288
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    TabOrder = 0
+  end
+  object Timer1: TTimer
+    Interval = 60000
+    OnTimer = Timer1Timer
+    left = 8
+    top = 200
+  end
+end
