@@ -1,2 +1,5 @@
 backup
 lib
+*.lps
+*.bak
+*.exe

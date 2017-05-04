@@ -13,8 +13,12 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    EditInterval: TEdit;
+    Label1: TLabel;
     Memo1: TMemo;
     Timer1: TTimer;
+    procedure EditIntervalChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
   private
     { private declarations }
@@ -54,22 +58,19 @@ end;
 function list_naver: astring;
 var
   re: tregexpr;
-  text: string;
 begin
   re := tregexpr.Create('<span class="ah_k">(.+?)</span>');
-  text := hc.get('http://www.naver.com');
-  list_naver := re_groups(re, text, 1);
+  list_naver := re_groups(re, hc.get('http://www.naver.com'), 1);
+  SetLength(list_naver, 20);
   re.Free;
 end;
 
 function list_daum: astring;
 var
   re: tregexpr;
-  text: string;
 begin
   re := tregexpr.Create('class="link_issue">(.+?)</a>');
-  text := hc.get('http://www.daum.net');
-  list_daum := re_groups(re, text, 1);
+  list_daum := re_groups(re, hc.get('http://www.daum.net'), 1);
   re.free;
 end;
 
@@ -80,12 +81,22 @@ begin
   memo1.Append(DateTimeToStr(Now));
   memo1.Text := memo1.Text + 'Naver: ';
   for x in list_naver do
-      memo1.Text := memo1.Text + x + ',';
-  memo1.Append('');
-  memo1.Text := memo1.Text + 'Daum: ';
+    memo1.Text := memo1.Text + x + ',';
+  memo1.Text := memo1.Text + #10 + 'Daum: ';
   for x in list_daum do
-      memo1.Text := memo1.Text + x + ',';
+    memo1.Text := memo1.Text + x + ',';
   memo1.Append('');
+end;
+
+procedure TForm1.EditIntervalChange(Sender: TObject);
+begin
+  Timer1.Interval := StrToInt(EditInterval.Text) * 1000;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  EditIntervalChange(Nil);
+  Timer1Timer(Nil);
 end;
 
 begin

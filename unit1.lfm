@@ -3,9 +3,10 @@ object Form1: TForm1
   Height = 237
   Top = 124
   Width = 304
-  Caption = 'Form1'
+  Caption = 'Naver Daum Top'
   ClientHeight = 237
   ClientWidth = 304
+  OnCreate = FormCreate
   LCLVersion = '1.6.4.0'
   object Memo1: TMemo
     AnchorSideRight.Side = asrBottom
@@ -15,12 +16,34 @@ object Form1: TForm1
     Top = 8
     Width = 288
     Anchors = [akTop, akLeft, akRight, akBottom]
+    ScrollBars = ssAutoBoth
     TabOrder = 0
+  end
+  object Label1: TLabel
+    AnchorSideBottom.Side = asrBottom
+    Left = 8
+    Height = 12
+    Top = 216
+    Width = 86
+    Anchors = [akLeft, akBottom]
+    Caption = 'Interval (secs):'
+    ParentColor = False
+  end
+  object EditInterval: TEdit
+    AnchorSideBottom.Side = asrBottom
+    Left = 96
+    Height = 23
+    Top = 208
+    Width = 68
+    Anchors = [akLeft, akBottom]
+    OnChange = EditIntervalChange
+    TabOrder = 1
+    Text = '600'
   end
   object Timer1: TTimer
     Interval = 60000
     OnTimer = Timer1Timer
-    left = 8
+    left = 264
     top = 200
   end
 end
