@@ -13,10 +13,12 @@ type
   { TForm1 }
 
   TForm1 = class(TForm)
+    ButtonRefresh: TButton;
     EditInterval: TEdit;
     Label1: TLabel;
     Memo1: TMemo;
     Timer1: TTimer;
+    procedure ButtonRefreshClick(Sender: TObject);
     procedure EditIntervalChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -91,6 +93,11 @@ end;
 procedure TForm1.EditIntervalChange(Sender: TObject);
 begin
   Timer1.Interval := StrToInt(EditInterval.Text) * 1000;
+end;
+
+procedure TForm1.ButtonRefreshClick(Sender: TObject);
+begin
+  Timer1Timer(Nil);
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
