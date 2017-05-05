@@ -31,8 +31,6 @@ type
   astring = array of string;
 
 var
-  hc: tfphttpclient;
-  x: string;
   Form1: TForm1;
 
 implementation
@@ -62,7 +60,7 @@ var
   re: tregexpr;
 begin
   re := tregexpr.Create('<span class="ah_k">(.+?)</span>');
-  list_naver := re_groups(re, hc.get('http://www.naver.com'), 1);
+  list_naver := re_groups(re, TFPHTTPClient.SimpleGet('https://www.naver.com'), 1);
   SetLength(list_naver, 20);
   re.Free;
 end;
@@ -72,13 +70,15 @@ var
   re: tregexpr;
 begin
   re := tregexpr.Create('class="link_issue">(.+?)</a>');
-  list_daum := re_groups(re, hc.get('http://www.daum.net'), 1);
+  list_daum := re_groups(re, TFPHTTPClient.SimpleGet('http://www.daum.net'), 1);
   re.free;
 end;
 
 { TForm1 }
 
 procedure TForm1.Timer1Timer(Sender: TObject);
+var
+  x: string;
 begin
   memo1.Append(DateTimeToStr(Now));
   memo1.Text := memo1.Text + 'Naver: ';
@@ -106,8 +106,5 @@ begin
   Timer1Timer(Nil);
 end;
 
-begin
-  hc := tfphttpclient.create(nil);
-  hc.AllowRedirect := true;
 end.
 
