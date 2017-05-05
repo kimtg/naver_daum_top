@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, regexpr, fphttpclient;
+  ExtCtrls, RegExpr, fphttpclient;
 
 type
 
@@ -28,8 +28,6 @@ type
     { public declarations }
   end;
 
-  astring = array of string;
-
 var
   Form1: TForm1;
 
@@ -37,35 +35,29 @@ implementation
 
 {$R *.lfm}
 
-function re_groups(re: tregexpr; text: string; group: integer): astring;
-var
-  r: astring;
+function re_groups(re: tregexpr; text: string; group: integer): TStrings;
 begin
+  re_groups := TStringList.Create;
   if re.Exec(text) then
   begin
-     setlength(r, 1);
-     r[0] := re.Match[group];
+     re_groups.Add(re.Match[group]);
      while re.ExecNext do
-     begin
-       setlength(r, length(r) + 1);
-       r[length(r) - 1] := re.match[group];
-     end;
+       re_groups.Add(re.match[group]);
   end;
-  re_groups := r;
 end;
 
 
-function list_naver: astring;
+function list_naver: TStrings;
 var
   re: tregexpr;
 begin
   re := tregexpr.Create('<span class="ah_k">(.+?)</span>');
   list_naver := re_groups(re, TFPHTTPClient.SimpleGet('https://www.naver.com'), 1);
-  SetLength(list_naver, 20);
+  list_naver.Capacity := 20;
   re.Free;
 end;
 
-function list_daum: astring;
+function list_daum: TStrings;
 var
   re: tregexpr;
 begin
@@ -79,14 +71,20 @@ end;
 procedure TForm1.Timer1Timer(Sender: TObject);
 var
   x: string;
+  ln, ld: TStrings;
 begin
   memo1.Append(DateTimeToStr(Now));
   memo1.Text := memo1.Text + 'Naver: ';
-  for x in list_naver do
-    memo1.Text := memo1.Text + x + ',';
+  ln := list_naver;
+  for x in ln do
+    memo1.Text := memo1.Text + x + '; ';
+  ln.Free;
+
   memo1.Text := memo1.Text + #10 + 'Daum: ';
-  for x in list_daum do
-    memo1.Text := memo1.Text + x + ',';
+  ld := list_daum;
+  for x in ld do
+    memo1.Text := memo1.Text + x + '; ';
+  ld.Free;
   memo1.Append('');
 end;
 
