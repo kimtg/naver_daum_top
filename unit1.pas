@@ -30,6 +30,7 @@ type
 
 var
   Form1: TForm1;
+  result: TStrings;
 
 implementation
 
@@ -70,22 +71,29 @@ end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 var
-  x: string;
+  x, item: string;
   ln, ld: TStrings;
 begin
-  memo1.Append(DateTimeToStr(Now));
-  memo1.Text := memo1.Text + 'Naver: ';
+  item := item + DateTimeToStr(Now);
+  item := item + #13#10'Naver: ';
   ln := list_naver;
   for x in ln do
-    memo1.Text := memo1.Text + x + '; ';
+    item := item + x + '; ';
   ln.Free;
 
-  memo1.Text := memo1.Text + #10 + 'Daum: ';
+  item := item + #13#10'Daum: ';
   ld := list_daum;
   for x in ld do
-    memo1.Text := memo1.Text + x + '; ';
+    item := item + x + '; ';
   ld.Free;
-  memo1.Append('');
+  item := item + #13#10;
+
+  result.Add(item);
+  while result.Count > 10000 do
+    result.Delete(0);
+  memo1.Clear;
+  for x in result do
+    memo1.Append(x);
 end;
 
 procedure TForm1.EditIntervalChange(Sender: TObject);
@@ -104,5 +112,7 @@ begin
   Timer1Timer(Nil);
 end;
 
+begin
+     result := TStringList.Create;
 end.
 
