@@ -53,7 +53,15 @@ var
   re: tregexpr;
 begin
   re := tregexpr.Create('<span class="ah_k">(.+?)</span>');
-  list_naver := re_groups(re, TFPHTTPClient.SimpleGet('https://www.naver.com'), 1);
+  try
+    list_naver := re_groups(re, TFPHTTPClient.SimpleGet('https://www.naver.com'), 1);
+  except
+    on e: Exception do
+    begin
+       list_naver := TStringList.Create;
+       list_naver.Add(e.ToString);
+    end;
+  end;
   list_naver.Capacity := 20;
   re.Free;
 end;
@@ -63,7 +71,15 @@ var
   re: tregexpr;
 begin
   re := tregexpr.Create('class="link_issue">(.+?)</a>');
-  list_daum := re_groups(re, TFPHTTPClient.SimpleGet('http://www.daum.net'), 1);
+  try
+    list_daum := re_groups(re, TFPHTTPClient.SimpleGet('http://www.daum.net'), 1);
+  except
+    on e : Exception do
+    begin
+      list_daum := TStringList.Create;
+      list_daum.Add(e.ToString);
+    end;
+  end;
   re.free;
 end;
 
