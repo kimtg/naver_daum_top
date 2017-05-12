@@ -53,15 +53,7 @@ var
   re: tregexpr;
 begin
   re := tregexpr.Create('<span class="ah_k">(.+?)</span>');
-  try
-    list_naver := re_groups(re, TFPHTTPClient.SimpleGet('https://www.naver.com'), 1);
-  except
-    on e: Exception do
-    begin
-       list_naver := TStringList.Create;
-       list_naver.Add(e.ToString);
-    end;
-  end;
+  list_naver := re_groups(re, TFPHTTPClient.SimpleGet('https://www.naver.com'), 1);
   list_naver.Capacity := 20;
   re.Free;
 end;
@@ -71,15 +63,7 @@ var
   re: tregexpr;
 begin
   re := tregexpr.Create('class="link_issue">(.+?)</a>');
-  try
-    list_daum := re_groups(re, TFPHTTPClient.SimpleGet('http://www.daum.net'), 1);
-  except
-    on e : Exception do
-    begin
-      list_daum := TStringList.Create;
-      list_daum.Add(e.ToString);
-    end;
-  end;
+  list_daum := re_groups(re, TFPHTTPClient.SimpleGet('http://www.daum.net'), 1);
   re.free;
 end;
 
@@ -90,20 +74,26 @@ var
   x, item: string;
   ln, ld: TStrings;
 begin
-  item := item + DateTimeToStr(Now);
-  item := item + #13#10'Naver: ';
-  ln := list_naver;
-  for x in ln do
-    item := item + x + '; ';
-  ln.Free;
+  try
+    item := item + DateTimeToStr(Now);
+    item := item + #13#10'Naver: ';
+    ln := list_naver;
+    for x in ln do
+      item := item + x + '; ';
+    ln.Free;
 
-  item := item + #13#10'Daum: ';
-  ld := list_daum;
-  for x in ld do
-    item := item + x + '; ';
-  ld.Free;
-  item := item + #13#10;
-
+    item := item + #13#10'Daum: ';
+    ld := list_daum;
+    for x in ld do
+      item := item + x + '; ';
+    ld.Free;
+    item := item + #13#10;
+  except
+    on e: Exception do
+    begin
+      item := item + e.ToString;
+    end;
+  end;
   result.Add(item);
   while result.Count > 10000 do
     result.Delete(0);
