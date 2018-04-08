@@ -7,7 +7,7 @@ object Form1: TForm1
   ClientHeight = 237
   ClientWidth = 367
   OnCreate = FormCreate
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.8.0.6'
   object Memo1: TMemo
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
@@ -33,8 +33,8 @@ object Form1: TForm1
   object EditInterval: TEdit
     AnchorSideBottom.Side = asrBottom
     Left = 96
-    Height = 20
-    Top = 211
+    Height = 23
+    Top = 208
     Width = 68
     Alignment = taRightJustify
     Anchors = [akLeft, akBottom]

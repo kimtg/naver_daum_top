@@ -62,8 +62,8 @@ function list_daum: TStrings;
 var
   re: tregexpr;
 begin
-  re := tregexpr.Create('class="link_issue">(.+?)</a>');
-  list_daum := re_groups(re, TFPHTTPClient.SimpleGet('http://www.daum.net'), 1);
+  re := tregexpr.Create('class=\"link_issue\" tabindex.*?>(.+?)</a>');
+  list_daum := re_groups(re, TFPHTTPClient.SimpleGet('https://www.daum.net'), 1);
   re.free;
 end;
 
