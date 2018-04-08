@@ -41,12 +41,11 @@ begin
   re_groups := TStringList.Create;
   if re.Exec(text) then
   begin
-     re_groups.Add(re.Match[group]);
-     while re.ExecNext do
-       re_groups.Add(re.match[group]);
+    repeat
+      re_groups.Add(re.match[group]);
+    until not re.ExecNext;
   end;
 end;
-
 
 function list_naver: TStrings;
 var
@@ -75,31 +74,33 @@ var
   ln, ld: TStrings;
 begin
   try
-    item := item + DateTimeToStr(Now);
-    item := item + #13#10'Naver: ';
-    ln := list_naver;
-    for x in ln do
-      item := item + x + '; ';
-    ln.Free;
+    try
+      item := item + DateTimeToStr(Now);
+      item := item + #13#10'Naver: ';
+      ln := list_naver;
+      for x in ln do
+        item := item + x + '; ';
 
-    item := item + #13#10'Daum: ';
-    ld := list_daum;
-    for x in ld do
-      item := item + x + '; ';
-    ld.Free;
-    item := item + #13#10;
-  except
-    on e: Exception do
-    begin
-      item := item + e.ToString;
+      item := item + #13#10'Daum: ';
+      ld := list_daum;
+      for x in ld do
+        item := item + x + '; ';
+
+      item := item + #13#10;
+    except
+      on e: Exception do
+        item := item + e.ToString;
     end;
+  finally
+    ln.Free;
+    ld.Free;
   end;
   result.Add(item);
   while result.Count > 10000 do
     result.Delete(0);
-  memo1.Clear;
-  for x in result do
-    memo1.Append(x);
+
+  memo1.Text := result.Text;
+  memo1.Append('');
 end;
 
 procedure TForm1.EditIntervalChange(Sender: TObject);
@@ -119,6 +120,6 @@ begin
 end;
 
 begin
-     result := TStringList.Create;
+  result := TStringList.Create;
 end.
 
