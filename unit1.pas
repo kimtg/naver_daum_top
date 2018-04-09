@@ -36,6 +36,9 @@ implementation
 
 {$R *.lfm}
 
+var
+  re_naver, re_daum: tregexpr;
+
 function re_groups(re: tregexpr; text: string; group: integer): TStrings;
 begin
   re_groups := TStringList.Create;
@@ -48,22 +51,14 @@ begin
 end;
 
 function list_naver: TStrings;
-var
-  re: tregexpr;
 begin
-  re := tregexpr.Create('<span class="ah_k">(.+?)</span>');
-  list_naver := re_groups(re, TFPHTTPClient.SimpleGet('https://www.naver.com'), 1);
+  list_naver := re_groups(re_naver, TFPHTTPClient.SimpleGet('https://www.naver.com'), 1);
   list_naver.Capacity := 20;
-  re.Free;
 end;
 
 function list_daum: TStrings;
-var
-  re: tregexpr;
 begin
-  re := tregexpr.Create('class=\"link_issue\" tabindex.*?>(.+?)</a>');
-  list_daum := re_groups(re, TFPHTTPClient.SimpleGet('https://www.daum.net'), 1);
-  re.free;
+  list_daum := re_groups(re_daum, TFPHTTPClient.SimpleGet('https://www.daum.net'), 1);
 end;
 
 { TForm1 }
@@ -120,6 +115,8 @@ begin
 end;
 
 begin
+  re_naver := tregexpr.Create('<span class="ah_k">(.+?)</span>');
+  re_daum := tregexpr.Create('class=\"link_issue\" tabindex.*?>(.+?)</a>');
   result := TStringList.Create;
 end.
 
