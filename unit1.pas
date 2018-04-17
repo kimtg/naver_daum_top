@@ -69,27 +69,24 @@ var
   ln, ld: TStrings;
 begin
   try
-    try
-      item := item + DateTimeToStr(Now);
-      item := item + #13#10'Naver: ';
-      ln := list_naver;
-      for x in ln do
-        item := item + x + '; ';
+    item := item + DateTimeToStr(Now);
+    item := item + #13#10'Naver: ';
+    ln := list_naver;
+    for x in ln do
+      item := item + x + '; ';
 
-      item := item + #13#10'Daum: ';
-      ld := list_daum;
-      for x in ld do
-        item := item + x + '; ';
+    item := item + #13#10'Daum: ';
+    ld := list_daum;
+    for x in ld do
+      item := item + x + '; ';
 
-      item := item + #13#10;
-    except
-      on e: Exception do
-        item := item + e.ToString;
-    end;
-  finally
-    ln.Free;
-    ld.Free;
+    item := item + #13#10;
+  except
+    on e: Exception do
+      item := item + e.ToString;
   end;
+  ln.Free;
+  ld.Free;
   result.Add(item);
   while result.Count > 10000 do
     result.Delete(0);
