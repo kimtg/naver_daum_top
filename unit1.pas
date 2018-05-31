@@ -39,24 +39,27 @@ implementation
 var
   re_naver, re_daum: tregexpr;
 
-function re_groups(re: tregexpr; text: string; group: integer): TStrings;
+function re_groups(re: tregexpr; text: string; group: integer): string;
+var
+  count : longint = 0;
 begin
-  re_groups := TStringList.Create;
+  re_groups := '';
   if re.Exec(text) then
   begin
     repeat
-      re_groups.Add(re.match[group]);
+      inc(count);
+      if count > 20 then break;
+      re_groups := re_groups + re.match[group] + '; ';
     until not re.ExecNext;
   end;
 end;
 
-function list_naver: TStrings;
+function list_naver: string;
 begin
   list_naver := re_groups(re_naver, TFPHTTPClient.SimpleGet('https://www.naver.com'), 1);
-  list_naver.Capacity := 20;
 end;
 
-function list_daum: TStrings;
+function list_daum: string;
 begin
   list_daum := re_groups(re_daum, TFPHTTPClient.SimpleGet('https://www.daum.net'), 1);
 end;
@@ -65,28 +68,16 @@ end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 var
-  x, item: string;
-  ln, ld: TStrings;
+  item: string;
 begin
   try
-    item := item + DateTimeToStr(Now);
-    item := item + #13#10'Naver: ';
-    ln := list_naver;
-    for x in ln do
-      item := item + x + '; ';
-
-    item := item + #13#10'Daum: ';
-    ld := list_daum;
-    for x in ld do
-      item := item + x + '; ';
-
-    item := item + #13#10;
+    item := DateTimeToStr(Now);
+    item := item + LineEnding + 'Naver: ' + list_naver;
+    item := item + LineEnding + 'Daum: ' + list_daum + LineEnding;
   except
     on e: Exception do
       item := item + e.ToString;
   end;
-  ln.Free;
-  ld.Free;
   result.Add(item);
   while result.Count > 10000 do
     result.Delete(0);
@@ -113,7 +104,7 @@ end;
 
 begin
   re_naver := tregexpr.Create('<span class="ah_k">(.+?)</span>');
-  re_daum := tregexpr.Create('class=\"link_issue\" tabindex.*?>(.+?)</a>');
+  re_daum := tregexpr.Create('class="link_issue" tabindex.*?>(.+?)</a>');
   result := TStringList.Create;
 end.
 
