@@ -7,7 +7,7 @@ object Form1: TForm1
   ClientHeight = 237
   ClientWidth = 367
   OnCreate = FormCreate
-  LCLVersion = '1.8.0.6'
+  LCLVersion = '2.0.6.0'
   object Memo1: TMemo
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom

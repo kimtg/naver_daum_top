@@ -38,17 +38,14 @@ implementation
 
 var
   re_naver, re_daum: tregexpr;
+  hc: TFPHTTPClient;
 
 function re_groups(re: tregexpr; text: string; group: integer): string;
-var
-  count : longint = 0;
 begin
   re_groups := '';
   if re.Exec(text) then
   begin
     repeat
-      inc(count);
-      if count > 20 then break;
       re_groups := re_groups + re.match[group] + '; ';
     until not re.ExecNext;
   end;
@@ -56,7 +53,7 @@ end;
 
 function list_naver: string;
 begin
-  list_naver := re_groups(re_naver, TFPHTTPClient.SimpleGet('https://www.naver.com'), 1);
+  list_naver := re_groups(re_naver, hc.Get('https://datalab.naver.com/keyword/realtimeList.naver'), 1);
 end;
 
 function list_daum: string;
@@ -103,8 +100,10 @@ begin
 end;
 
 begin
-  re_naver := tregexpr.Create('<span class="ah_k">(.+?)</span>');
+  re_naver := tregexpr.Create('<span class="item_title">(.+?)</span>');
   re_daum := tregexpr.Create('class="link_issue" tabindex.*?>(.+?)</a>');
   result := TStringList.Create;
+  hc := TFPHTTPClient.Create(nil);
+  hc.RequestHeaders.Add('User-Agent: a');
 end.
 
